@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccuWeatherProjectAPI</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function validateForm() {
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+            const intermediate = document.getElementById('intermediate').value;
+
+            const letterRegex = /^[а-яА-ЯёЁa-zA-Z\s-]+$/;
+
+            if (!letterRegex.test(start)) {
+                alert("Названия городов могут содержать только буквы и дефис.");
+                return false;
+            }
+
+            if (!letterRegex.test(end)) {
+                alert("Названия городов могут содержать только буквы и дефис.");
+                return false;
+            }
+
+            if (intermediate) {
+                const trimmedCities = intermediate.split(',').map(city => city.trim());
+                for (let city of trimmedCities) {
+                    if (!letterRegex.test(city)) {
+                        alert("Названия промежуточных городов могут содержать только буквы и дефис и должны быть разделены запятыми.");
+                        return false;
+                    }
+                }
+                if (intermediate.includes(' ') && !intermediate.includes(',')) {
+                    alert("Если есть пробелы между названиями промежуточных городов, они должны быть разделены запятыми.");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Введите маршрут</h1>
+        <form method="post" class="mt-4" onsubmit="return validateForm();">
+            <div class="form-group">
+                <label for="start">Начальная точка:</label>
+                <input type="text" class="form-control" id="start" name="start" required>
+            </div>
+
+            <div class="form-group">
+                <label for="intermediate">Промежуточные города (через запятую):</label>
+                <input type="text" class="form-control" id="intermediate" name="intermediate">
+            </div>
+
+            <div class="form-group">
+                <label for="end">Конечная точка:</label>
+                <input type="text" class="form-control" id="end" name="end" required>
+            </div>
+
+            <div class="form-group">
+                <label for="interval">Выберите промежуток:</label>
+                <select id="interval" name="interval">
+                    <option value="1">1 день</option>
+                    <option value="2">2 дня</option>
+                    <option value="3">3 дня</option>
+                    <option value="4">4 дня</option>
+                    <option value="5">5 дней</option>
+                </select><br>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Получить прогноз</button>
+        </form>
+
+        {% if result %}
+            <div class="alert alert-info text-center mt-4">{{ result }}</div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
